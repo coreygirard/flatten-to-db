@@ -1,5 +1,6 @@
 import json
 
+
 def walk_tree(data, parent_path, path):
     if isinstance(data, list):
         yield {"parent_path": parent_path, "path": path}
@@ -15,8 +16,7 @@ def walk_tree(data, parent_path, path):
         yield {"parent_path": parent_path, "path": path, "value": data}
 
 
-def parse(j):
-    data = json.loads(j)
+def parse(data):
     gen = walk_tree(data=data, parent_path="/", path="/")
     gen = filter(lambda d: d["path"] != "/" or "value" in d, gen)
 

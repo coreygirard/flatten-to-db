@@ -33,11 +33,10 @@ def walk_tree(data, parent_path, path, tag):
         }
 
 
-def parse(xml):
+def _parse(xml):
     data = xmltodict.parse(xml)
     gen = walk_tree(data=data, parent_path="/", path="/", tag="")
     gen = filter(lambda d: d["path"] != "/", gen)
-    # gen = filter(lambda d: d["path"] != "", gen)
 
     def f(d):
         if "parent_path" not in d:
@@ -46,3 +45,15 @@ def parse(xml):
 
     gen = map(f, gen)
     return list(gen)
+
+
+def parse(data=None, filename=None):
+    assert (
+        data is None or filename is None
+    ), "Pass either data or filename, but not both"
+
+    if filename is not None:
+        with open(filename, "r") as f:
+            data = f.read()
+
+    return _parse(data)
