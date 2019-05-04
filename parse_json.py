@@ -1,38 +1,27 @@
-from pprint import pprint
-
-
-def add_parent_path(gen, path):
-    for temp in gen:
-        if "parent_path" not in temp:
-            temp["parent_path"] = path
-        yield temp
-
-
-def walk_tree(data, path):
+def walk_tree(data, parent_path, path):
     if isinstance(data, list):
-        yield {"path": path}
+        yield {"parent_path": parent_path, "path": path}
         for i, e in enumerate(data):
-            gen = walk_tree(e, f"{path}{i}/")
-            yield from add_parent_path(gen, path)
+            yield from walk_tree(e, path, f"{path}{i}/")
 
     elif isinstance(data, dict):
-        yield {"path": path}
+        yield {"parent_path": parent_path, "path": path}
         for k, v in data.items():
-            gen = walk_tree(v, f"{path}{k}/")
-            yield from add_parent_path(gen, path)
+            yield from walk_tree(v, path, f"{path}{k}/")
 
     else:
-        yield {"path": path, "value": data}
+        yield {"parent_path": parent_path, "path": path, "value": data}
 
 
-def parse(t):
-    out = []
-    for e in walk_tree(data=t, path="/"):
-        if e["path"] == "/" and "value" not in e:
-            continue
+def parse(data):
+    gen = walk_tree(data=data, parent_path="/", path="/")
+    gen = filter(lambda d: d["path"] != "/" or "value" in d, gen)
 
-        if "parent_path" not in e:
-            e["parent_path"] = "/"
+    def f(d):
+        if "parent_path" not in d:
+            d["parent_path"] = "/"
+        return d
 
-        out.append(e)
-    return out
+    gen = map(f, gen)
+
+    return list(gen)
