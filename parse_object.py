@@ -1,6 +1,3 @@
-import json
-
-
 def walk_tree(data, parent_path, path):
     if isinstance(data, list):
         yield {"parent_path": parent_path, "path": path}
