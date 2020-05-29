@@ -1,4 +1,23 @@
-import parse_yaml
+from src import parse_yaml
+
+
+def test_parse_simple():
+    y = """
+name:
+  family: Smith
+  given: John
+"""
+
+    expected = [
+        {"comments": [], "parent_path": "/", "path": "/"},
+        {"comments": [], "parent_path": "/", "path": "/name/"},
+        {"parent_path": "/name/", "path": "/name/family/", "value": "Smith"},
+        {"parent_path": "/name/", "path": "/name/given/", "value": "John"},
+    ]
+
+    actual = parse_yaml.parse(y)
+
+    assert expected == actual
 
 
 def test_parse():

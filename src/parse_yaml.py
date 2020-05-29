@@ -62,7 +62,12 @@ def walk_tree(data, parent_path, path):
         yield {"parent_path": parent_path, "path": path, "comments": comments}
         for k, v in data.items():
             for temp in walk_tree(v, path, f"{path}{k}/"):
-                temp.setdefault("comments", strip_nones(data._yaml_comment.items[k]))
+                try:
+                    temp.setdefault(
+                        "comments", strip_nones(data._yaml_comment.items[k])
+                    )
+                except:
+                    pass
                 yield temp
 
     else:

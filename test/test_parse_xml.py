@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from pprint import pprint
 
-import parse_xml
+from src import parse_xml
 
 
 def test__parse__simple():

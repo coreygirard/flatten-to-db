@@ -2,8 +2,8 @@ from pprint import pprint
 from collections import Counter
 from hypothesis import given, assume
 
-from parse_object import parse
-from strategy_object import object_strategy
+from src.parse_object import parse
+from test.strategy_object import object_strategy
 
 
 @given(object_strategy())
@@ -75,13 +75,4 @@ def test_can_rebuild(j):
         if "value" in e:
             tree = add_to_tree(tree, e["split_path"], e["value"])
 
-    pprint(j)
-    print()
-    pprint(out)
-    print()
-    pprint(tree)
-    print()
-
     assert tree == lists_to_dicts(j)
-
-    print("\n" * 5)
