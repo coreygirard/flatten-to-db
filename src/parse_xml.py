@@ -59,3 +59,23 @@ def parse(data=None, filename=None):
     return _parse(data)
 
 
+def unparse_recurse(data, path="/"):
+    # TODO: currently relies on proper ordering
+    out = {}
+    for i, row in enumerate(data):
+        if row["parent_path"] == path:
+            if row["value"] != "":
+                out[row["tag"]] = {"#text": row["value"]}
+            else:
+                out[row["tag"]] = unparse_recurse(
+                    data[i + 1 :], path + row["tag"] + "/"
+                )
+            for k, v in row["attributes"].items():
+                out[row["tag"]]["@" + k] = v
+    return out
+
+
+def unparse(data, header=False):
+    tree = unparse_recurse(data)
+
+    return xmltodict.unparse(tree, pretty=True, indent="  ", full_document=header)
