@@ -24,6 +24,19 @@ def test_dict():
     assert actual == expected
 
 
+def test_empty_key():
+    data = {"": {"": {"aaa": {"": {"": "bbb"}}}}}
+    actual = parse_object.parse(data)
+    expected = [
+        {"parent_path": "/", "path": "//"},
+        {"parent_path": "//", "path": "///"},
+        {"parent_path": "///", "path": "///aaa/"},
+        {"parent_path": "///aaa/", "path": "///aaa//"},
+        {"parent_path": "///aaa//", "path": "///aaa///", "value": "bbb"},
+    ]
+    assert actual == expected
+
+
 def test_nested_dict():
     data = {"aaa": {"bbb": "ccc", "ddd": "eee"}, "fff": "ggg"}
     actual = parse_object.parse(data)
