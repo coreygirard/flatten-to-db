@@ -1,11 +1,11 @@
 from pprint import pprint
 from string import printable
-from src import parse_object
+from src import parse
 
 
 def test_list():
     data = [4, 5, 6]
-    actual = parse_object.parse(data)
+    actual = parse.object(data)
     expected = [
         {"parent_path": "/", "path": "/0/", "value": 4},
         {"parent_path": "/", "path": "/1/", "value": 5},
@@ -16,7 +16,7 @@ def test_list():
 
 def test_dict():
     data = {"aaa": "bbb", "ccc": "ddd"}
-    actual = parse_object.parse(data)
+    actual = parse.object(data)
     expected = [
         {"parent_path": "/", "path": "/aaa/", "value": "bbb"},
         {"parent_path": "/", "path": "/ccc/", "value": "ddd"},
@@ -26,7 +26,7 @@ def test_dict():
 
 def test_empty_key():
     data = {"": {"": {"aaa": {"": {"": "bbb"}}}}}
-    actual = parse_object.parse(data)
+    actual = parse.object(data)
     expected = [
         {"parent_path": "/", "path": "//"},
         {"parent_path": "//", "path": "///"},
@@ -39,7 +39,7 @@ def test_empty_key():
 
 def test_nested_dict():
     data = {"aaa": {"bbb": "ccc", "ddd": "eee"}, "fff": "ggg"}
-    actual = parse_object.parse(data)
+    actual = parse.object(data)
     expected = [
         {"parent_path": "/", "path": "/aaa/"},
         {"parent_path": "/aaa/", "path": "/aaa/bbb/", "value": "ccc"},
@@ -63,7 +63,7 @@ def test_dict_list_combo():
         },
         "fff": "ggg",
     }
-    actual = parse_object.parse(data)
+    actual = parse.object(data)
     expected = [
         {"parent_path": "/", "path": "/aaa/"},
         {"parent_path": "/aaa/", "path": "/aaa/bbb/", "value": "ccc"},

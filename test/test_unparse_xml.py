@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from pprint import pprint
 
-from src import parse_xml
+from src import unparse
 
 
 def test__unparse__dict_list_simple():
@@ -63,5 +63,62 @@ def test__unparse__dict_list_simple():
         ]
     )
 
-    actual = parse_xml.unparse(_input)
+    actual = unparse.xml(_input)
+    assert actual == expected
+
+
+def test__unparse__multiple_siblings_simple():
+
+    _input = [
+        {
+            "attributes": {},
+            "parent_path": "/",
+            "path": "/Vehicles/",
+            "tag": "Vehicles",
+            "value": "",
+        },
+        {
+            "attributes": {},
+            "parent_path": "/Vehicles/",
+            "path": "/Vehicles/Vehicle/0/",
+            "tag": "Vehicle",
+            "value": "",
+        },
+        {
+            "attributes": {},
+            "parent_path": "/Vehicles/Vehicle/0/",
+            "path": "/Vehicles/Vehicle/0/Type/",
+            "tag": "Type",
+            "value": "Red Scooter",
+        },
+        {
+            "attributes": {},
+            "parent_path": "/Vehicles/",
+            "path": "/Vehicles/Vehicle/1/",
+            "tag": "Vehicle",
+            "value": "",
+        },
+        {
+            "attributes": {},
+            "parent_path": "/Vehicles/Vehicle/1/",
+            "path": "/Vehicles/Vehicle/1/Type/",
+            "tag": "Type",
+            "value": "Red Scooter",
+        },
+    ]
+
+    expected = "\n".join(
+        [
+            "<Vehicles>",
+            "  <Vehicle>",
+            "    <Type>Red Scooter</Type>",
+            "  </Vehicle>",
+            "  <Vehicle>",
+            "    <Type>Red Scooter</Type>",
+            "  </Vehicle>",
+            "</Vehicles>",
+        ]
+    )
+
+    actual = unparse.xml(_input)
     assert actual == expected

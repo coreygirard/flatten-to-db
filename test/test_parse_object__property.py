@@ -1,19 +1,20 @@
 from pprint import pprint
 from collections import Counter
 from hypothesis import given, assume
+import math
 
-from src.parse_object import parse
+from src import parse, unparse
 from test.strategy_object import object_strategy
 
 
 @given(object_strategy())
 def test_doesnt_fail(j):
-    parse(j)
+    parse.object(j)
 
 
 @given(object_strategy())
 def test_is_list_of_maps(j):
-    out = parse(j)
+    out = parse.object(j)
     assert isinstance(out, list)
     for e in out:
         assert isinstance(e, dict)
@@ -24,7 +25,7 @@ def test_is_list_of_maps(j):
 
 @given(object_strategy())
 def test_parent_paths_have_counterparts(j):
-    out = parse(j)
+    out = parse.object(j)
 
     paths = Counter(map(lambda d: d["path"], out))
     parent_paths = Counter(map(lambda d: d["parent_path"], out))
@@ -38,7 +39,7 @@ def test_parent_paths_have_counterparts(j):
 
 @given(object_strategy())
 def test_path_uniqueness(j):
-    out = parse(j)
+    out = parse.object(j)
     paths = [d["path"] for d in out]
     assert len(paths) == len(set(paths))
 
@@ -54,6 +55,7 @@ def add_to_tree(tree, path, value):
     return tree
 
 
+"""
 def lists_to_dicts(data):
     if isinstance(data, list):
         return {str(i): lists_to_dicts(e) for i, e in enumerate(data)}
@@ -61,7 +63,6 @@ def lists_to_dicts(data):
         return {k: lists_to_dicts(v) for k, v in enumerate(data)}
     else:
         return data
-
 
 @given(object_strategy())
 def test_can_rebuild(j):
@@ -76,3 +77,22 @@ def test_can_rebuild(j):
             tree = add_to_tree(tree, e["split_path"], e["value"])
 
     assert tree == lists_to_dicts(j)
+"""
+
+
+@given(object_strategy())
+def test_reversible(data):
+    once = parse.object(data)
+    thrice = parse.object(unparse.object(parse.object(data)))
+    assert once == thrice
+
+
+@given(object_strategy())
+def test_reversible_2(data):
+    twice = unparse.object(parse.object(data))
+
+    # yes, this is necessary
+    if isinstance(data, float) and math.isnan(data):
+        assert math.isnan(twice)
+    else:
+        assert twice == data

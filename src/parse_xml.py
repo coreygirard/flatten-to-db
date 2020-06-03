@@ -1,4 +1,6 @@
+from pprint import pprint
 import xmltodict
+from src.utils import split_path
 
 
 def walk_tree(data, parent_path, path, tag):
@@ -33,7 +35,7 @@ def walk_tree(data, parent_path, path, tag):
         }
 
 
-def _parse(xml):
+def parse(xml):
     data = xmltodict.parse(xml)
     gen = walk_tree(data=data, parent_path="/", path="/", tag="")
     gen = filter(lambda d: d["path"] != "/", gen)
@@ -47,35 +49,7 @@ def _parse(xml):
     return list(gen)
 
 
-def parse(data=None, filename=None):
-    assert (
-        data is None or filename is None
-    ), "Pass either data or filename, but not both"
-
-    if filename is not None:
-        with open(filename, "r") as f:
-            data = f.read()
-
-    return _parse(data)
-
-
-def unparse_recurse(data, path="/"):
-    # TODO: currently relies on proper ordering
-    out = {}
-    for i, row in enumerate(data):
-        if row["parent_path"] == path:
-            if row["value"] != "":
-                out[row["tag"]] = {"#text": row["value"]}
-            else:
-                out[row["tag"]] = unparse_recurse(
-                    data[i + 1 :], path + row["tag"] + "/"
-                )
-            for k, v in row["attributes"].items():
-                out[row["tag"]]["@" + k] = v
-    return out
-
-
-def unparse(data, header=False):
-    tree = unparse_recurse(data)
-
-    return xmltodict.unparse(tree, pretty=True, indent="  ", full_document=header)
+def parse_from_file(filename):
+    with open(filename, "r") as f:
+        data = f.read()
+    return parse(data)

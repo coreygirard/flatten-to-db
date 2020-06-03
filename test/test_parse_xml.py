@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from pprint import pprint
 
-from src import parse_xml
+from src import parse
 
 
 def test__parse__simple():
@@ -28,7 +28,7 @@ def test__parse__simple():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -89,7 +89,7 @@ def test__parse__dict_list_simple():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -142,7 +142,7 @@ def test__parse__multiple_siblings_simple():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -237,7 +237,7 @@ def test__parse__multiple_siblings():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -357,7 +357,7 @@ def test__parse__mixed_list():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -427,7 +427,7 @@ def test__parse__no_siblings():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -497,7 +497,7 @@ def test__parse__many_attributes():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -544,7 +544,7 @@ def test__parse__strange_hybrid_tag():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -907,7 +907,7 @@ def test__parse__ugly_xml():
         },
     ]
 
-    actual = parse_xml.parse(_input)
+    actual = parse.xml(_input)
     assert actual == expected
 
 
@@ -924,7 +924,7 @@ def test__parse__leaf_attributes():
         }
     ]
 
-    actual = parse_xml.parse(data)
+    actual = parse.xml(data)
     assert actual == expected
 
 
@@ -986,7 +986,7 @@ def test__parse__leaf_attributes():
         },
     ]
 
-    actual = parse_xml.parse(data)
+    actual = parse.xml(data)
     assert actual == expected
 
 
@@ -1025,5 +1025,5 @@ def _test__parse__multiple_strings():
         },
     ]
 
-    actual = parse_xml.parse(data)
+    actual = parse.xml(data)
     assert actual == expected

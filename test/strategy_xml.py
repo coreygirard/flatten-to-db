@@ -58,7 +58,7 @@ def element_strategy(draw):
 
 
 @composite
-def xml_strategy(draw):
+def _xml_strategy(draw):
     temp = draw(element_strategy())
     assume(len(json.dumps(temp)) < 10000)
     return temp
@@ -76,12 +76,13 @@ def to_xml_string(data):
 
 
 @composite
-def before_and_after(draw):
-    before = draw(xml_strategy())
+def xml_strategy(draw):
+    before = draw(_xml_strategy())
     after = to_xml_string(before)
-    return before, after
+    return after, before
 
 
+"""
 from pprint import pprint
 
 strat = before_and_after()
@@ -92,3 +93,4 @@ for _ in range(20):
     pprint(before)
     print()
     pprint(after)
+"""

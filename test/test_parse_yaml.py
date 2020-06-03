@@ -1,4 +1,4 @@
-from src import parse_yaml
+from src import parse
 
 
 def test_parse_simple():
@@ -15,7 +15,7 @@ name:
         {"parent_path": "/name/", "path": "/name/given/", "value": "John"},
     ]
 
-    actual = parse_yaml.parse(y)
+    actual = parse.yaml(y)
 
     assert expected == actual
 
@@ -47,6 +47,6 @@ name:
             "value": "John",
         },
     ]
-    actual = parse_yaml.parse(y)
+    actual = parse.yaml(y)
 
     assert expected == actual

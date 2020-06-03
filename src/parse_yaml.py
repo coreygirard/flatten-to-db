@@ -94,20 +94,23 @@ def _parse(data):
     """
 
 
-def parse(data=None, filename=None, comments=True):
-    if (data is not None and filename is not None) or (
-        data is None and filename is None
-    ):
-        raise TypeError("Pass either data or filename, but not both")
-
+def parse_from_file(filename, comments=True):
     yaml = YAML(typ="rt")
 
-    if data is not None:
-        y = yaml.load(data)
-    else:
-        with open(filename, "r") as f:
-            y = yaml.load(f)
+    with open(filename, "r") as f:
+        y = yaml.load(f)
 
+    result = _parse(y)
+    if not comments:
+        for d in result:
+            d.pop("comments")
+
+    return result
+
+
+def parse(data=None, filename=None, comments=True):
+    yaml = YAML(typ="rt")
+    y = yaml.load(data)
     result = _parse(y)
     if not comments:
         for d in result:
